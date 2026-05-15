@@ -1,7 +1,61 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 export default function SignUpPage() {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agreed, setAgreed] = useState(false);
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting) return;
+
+    setError("");
+
+    if (!agreed) {
+      setError("Bạn cần đồng ý điều khoản đềEtiếp tục.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Mật khẩu xác nhận không khớp.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error ?? "Không thềEđăng ký. Vui lòng thử lại.");
+        return;
+      }
+
+      router.push("/login?registered=1");
+    } catch {
+      setError("Không thềEkết nối máy chủ. Vui lòng thử lại.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <main className="min-h-screen flex flex-col md:flex-row bg-[#f9f9fc]">
-      {/* LEFT VISUAL */}
       <div className="hidden md:flex md:w-1/2 relative overflow-hidden bg-[#ab3500]">
         <div className="absolute inset-0 bg-gradient-to-tr from-black/40 via-black/10 to-transparent" />
 
@@ -26,32 +80,35 @@ export default function SignUpPage() {
         </div>
       </div>
 
-      {/* RIGHT FORM */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          {/* BRAND */}
           <div className="mb-10 text-center md:text-left">
-            <a href="/" className="text-3xl font-bold text-[#ab3500]">
+            <Link href="/" className="text-3xl font-bold text-[#ab3500]">
               TravelTaste
-            </a>
+            </Link>
 
             <h2 className="text-2xl font-bold mt-6">Tạo tài khoản mới</h2>
             <p className="text-gray-500 mt-2">
-              Hãy điền thông tin bên dưới để bắt đầu.
+              Hãy điền thông tin bên dưới đềEbắt đầu.
             </p>
           </div>
 
-          {/* FORM */}
-          <form className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <input
               className="w-full px-6 py-4 rounded-full bg-white shadow"
               placeholder="Họ và tên"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
             />
 
             <input
               className="w-full px-6 py-4 rounded-full bg-white shadow"
               placeholder="Email"
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
 
             <div className="grid grid-cols-2 gap-4">
@@ -59,71 +116,60 @@ export default function SignUpPage() {
                 className="w-full px-6 py-4 rounded-full bg-white shadow"
                 placeholder="Mật khẩu"
                 type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={8}
               />
               <input
                 className="w-full px-6 py-4 rounded-full bg-white shadow"
                 placeholder="Xác nhận"
                 type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={8}
               />
             </div>
 
             <label className="flex items-center gap-2 text-sm text-gray-600">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                checked={agreed}
+                onChange={(e) => setAgreed(e.target.checked)}
+              />
               Tôi đồng ý điều khoản
             </label>
 
+            {error ? (
+              <p className="text-sm text-red-600" role="alert">
+                {error}
+              </p>
+            ) : null}
+
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-gradient-to-r from-[#ff6b35] to-[#ff8a5c] text-white font-semibold shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-[1.03] hover:shadow-orange-500/40 hover:-translate-y-0.5 active:scale-95 active:translate-y-0"
+              disabled={submitting}
+              className="w-full py-4 rounded-full bg-gradient-to-r from-[#ff6b35] to-[#ff8a5c] text-white font-semibold shadow-lg shadow-orange-500/30 transition-all duration-300 hover:scale-[1.03] hover:shadow-orange-500/40 hover:-translate-y-0.5 active:scale-95 active:translate-y-0 disabled:opacity-60"
             >
-              Đăng ký ngay
+              {submitting ? "Đang đăng ký..." : "Đăng ký ngay"}
             </button>
           </form>
 
-          {/* SOCIAL */}
-          <div className="my-8 text-center text-gray-400">Hoặc</div>
-
-          <div className="flex gap-4">
-            <button className="flex-1 flex items-center justify-center gap-3 px-6 py-3 rounded-full bg-white/80 backdrop-blur-md border border-gray-200 shadow-sm transition-all duration-300 hover:bg-white hover:shadow-lg hover:-translate-y-1 hover:scale-[1.02] active:scale-95">
-              <svg className="w-5 h-5" viewBox="0 0 48 48">
-                <path
-                  fill="#EA4335"
-                  d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C36.64 2.34 30.82 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-                />
-                <path
-                  fill="#4285F4"
-                  d="M46.1 24.5c0-1.6-.14-3.13-.4-4.5H24v9h12.7c-.58 3.02-2.26 5.6-4.8 7.3l7.4 5.75C43.9 37.3 46.1 31.4 46.1 24.5z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M10.54 28.41A14.5 14.5 0 0 1 9.5 24c0-1.52.26-2.99.71-4.41l-7.98-6.19A24 24 0 0 0 0 24c0 3.84.92 7.47 2.56 10.6l7.98-6.19z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M24 48c6.48 0 12-2.14 16-5.84l-7.4-5.75c-2.06 1.38-4.7 2.2-8.6 2.2-6.26 0-11.57-4.22-13.46-9.99l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-                />
-              </svg>
-              <span className="font-medium text-gray-700">Google</span>
-            </button>
-            <button className="flex-1 flex items-center justify-center gap-3 px-6 py-3 rounded-full bg-[#1877F2] text-white shadow-md shadow-blue-500/30 transition-all duration-300 hover:opacity-95 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-500/40 active:scale-95">
-              <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24">
-                <path d="M22 12a10 10 0 1 0-11.5 9.9v-7H8v-3h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12H17l-.5 3h-2.4v7A10 10 0 0 0 22 12z" />
-              </svg>
-              <span className="font-medium">Facebook</span>
-            </button>
-          </div>
-
           <p className="text-center mt-8 text-gray-500">
             Đã có tài khoản?{" "}
-            <a className="text-[#ab3500] font-bold" href="/login">
+            <Link className="text-[#ab3500] font-bold" href="/login">
               Đăng nhập
-            </a>
+            </Link>
           </p>
         </div>
       </div>
 
-      {/* FLOAT BUTTON */}
-      <button className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg">
+      <button
+        type="button"
+        className="fixed bottom-8 right-8 w-14 h-14 rounded-full bg-orange-500 text-white shadow-lg"
+        aria-label="Trợ giúp"
+      >
         ?
       </button>
     </main>

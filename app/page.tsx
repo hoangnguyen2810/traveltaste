@@ -1,4 +1,12 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import UserAccountMenu from "@/components/UserAccountMenu";
+import HomeHero from "@/components/HomeHero";
+
 export default function HomePage() {
+  const [openMenu, setOpenMenu] = useState(false);
   return (
     <div className="bg-zinc-50 text-zinc-900 font-sans">
       {/* NAVBAR */}
@@ -34,9 +42,21 @@ export default function HomePage() {
               <span className="material-symbols-outlined">notifications</span>
             </button>
 
-            <button className="p-2 rounded-full hover:bg-zinc-100 transition">
-              <span className="material-symbols-outlined">account_circle</span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setOpenMenu(!openMenu)}
+                className="p-2 rounded-full hover:bg-zinc-100 transition"
+              >
+                <span className="material-symbols-outlined">
+                  account_circle
+                </span>
+              </button>
+
+              <UserAccountMenu
+                open={openMenu}
+                onClose={() => setOpenMenu(false)}
+              />
+            </div>
           </div>
         </nav>
       </header>
@@ -52,9 +72,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-black/30 backdrop-blur-[2px]" />
 
         <div className="relative z-10 w-full max-w-4xl px-6 text-center">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-8 drop-shadow-lg leading-tight">
-            Khám phá hương vị và hành trình mới
-          </h1>
+          <HomeHero />
 
           {/* SEARCH */}
           <div className="bg-white/90 backdrop-blur-xl p-2 rounded-full shadow-2xl flex items-center max-w-3xl mx-auto border border-white/20">
