@@ -49,15 +49,24 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.email = user.email;
         token.sub = user.id;
+        if (user.image) {
+          token.picture = user.image;
+        }
       }
       if (trigger === "update" && session && typeof session === "object") {
         const payload = session as Record<string, unknown>;
         if (typeof payload.name === "string") {
           token.name = payload.name;
         }
-        const u = payload.user as { name?: string } | undefined;
+        if (typeof payload.image === "string") {
+          token.picture = payload.image;
+        }
+        const u = payload.user as { name?: string; image?: string } | undefined;
         if (u && typeof u.name === "string") {
           token.name = u.name;
+        }
+        if (u && typeof u.image === "string") {
+          token.picture = u.image;
         }
       }
       return token;
@@ -66,6 +75,8 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.name = (token.name as string) ?? session.user.name;
         session.user.email = (token.email as string) ?? session.user.email;
+        session.user.image =
+          (token.picture as string | undefined) ?? session.user.image;
       }
       return session;
     },

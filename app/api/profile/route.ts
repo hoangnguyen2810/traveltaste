@@ -29,7 +29,7 @@ export async function GET() {
     console.error("GET /api/profile:", error);
     return NextResponse.json(
       { error: "Không thể tải hồ sơ." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -49,7 +49,7 @@ export async function PATCH(request: Request) {
     if (!name) {
       return NextResponse.json(
         { error: "Họ và tên không được để trống." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -62,7 +62,7 @@ export async function PATCH(request: Request) {
       avatarUrl:
         typeof body.avatarUrl === "string"
           ? body.avatarUrl
-          : session.user?.image ?? undefined,
+          : (session.user?.image ?? undefined),
     });
 
     return NextResponse.json({ profile });
@@ -70,7 +70,7 @@ export async function PATCH(request: Request) {
     console.error("PATCH /api/profile:", error);
     return NextResponse.json(
       { error: "Không thể cập nhật hồ sơ." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

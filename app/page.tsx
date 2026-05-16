@@ -1,69 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import UserAccountMenu from "@/components/UserAccountMenu";
+import SiteHeader from "@/components/SiteHeader";
+import SiteFooter from "@/components/SiteFooter";
+import BottomNav from "@/components/BottomNav";
 import HomeHero from "@/components/HomeHero";
 
 export default function HomePage() {
-  const [openMenu, setOpenMenu] = useState(false);
   return (
-    <div className="bg-zinc-50 text-zinc-900 font-sans">
-      {/* NAVBAR */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-lg">
-        <nav className="max-w-7xl mx-auto h-20 px-6 lg:px-10 flex items-center justify-between">
-          <div className="text-3xl font-bold text-orange-700 tracking-tight">
-            TravelTaste
-          </div>
-
-          <div className="hidden md:flex items-center gap-8">
-            <a
-              href="#"
-              className="text-orange-700 border-b-2 border-orange-700 pb-1 font-medium"
-            >
-              Home
-            </a>
-
-            <a href="#" className="hover:text-orange-700 transition-colors">
-              Discover
-            </a>
-
-            <a href="#" className="hover:text-orange-700 transition-colors">
-              Search
-            </a>
-
-            <a href="#" className="hover:text-orange-700 transition-colors">
-              Favorites
-            </a>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button className="p-2 rounded-full hover:bg-zinc-100 transition">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setOpenMenu(!openMenu)}
-                className="p-2 rounded-full hover:bg-zinc-100 transition"
-                aria-label="Tài khoản"
-                aria-expanded={openMenu}
-              >
-                <span className="material-symbols-outlined">
-                  account_circle
-                </span>
-              </button>
-
-              <UserAccountMenu
-                open={openMenu}
-                onClose={() => setOpenMenu(false)}
-              />
-            </div>
-          </div>
-        </nav>
-      </header>
-
+    <div className="bg-zinc-50 text-zinc-900 font-sans pb-32">
+      <SiteHeader activeNav="home" />
       {/* HERO */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <img
@@ -91,9 +37,12 @@ export default function HomePage() {
               />
             </div>
 
-            <button className="bg-orange-700 text-white px-10 py-4 rounded-full hover:opacity-90 transition">
+            <Link
+              href="/search"
+              className="bg-orange-700 text-white px-10 py-4 rounded-full hover:opacity-90 transition"
+            >
               Tìm kiếm
-            </button>
+            </Link>
           </div>
 
           {/* QUICK CATEGORY */}
@@ -337,107 +286,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="bg-zinc-100 border-t">
-        <div className="max-w-7xl mx-auto py-16 px-6 lg:px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          <div className="space-y-6">
-            <div className="text-3xl font-bold text-orange-700">
-              TravelTaste
-            </div>
-
-            <p className="text-zinc-600">
-              © 2026 TravelTaste. Your vibrant concierge for culinary adventures
-              and effortless travel.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="font-bold">Khám phá</h4>
-
-            <ul className="space-y-2 text-zinc-600">
-              <li>
-                <a href="#" className="hover:text-orange-700">
-                  Explore Destinations
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="hover:text-orange-700">
-                  Top Culinary Spots
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="font-bold">Cá nhân</h4>
-
-            <ul className="space-y-2 text-zinc-600">
-              <li>
-                <a href="#" className="hover:text-orange-700">
-                  My Itinerary
-                </a>
-              </li>
-
-              <li>
-                <a href="#" className="hover:text-orange-700">
-                  Privacy Policy
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h4 className="font-bold">Liên hệ</h4>
-
-            <div className="flex gap-4">
-              <span className="material-symbols-outlined text-orange-700 cursor-pointer">
-                public
-              </span>
-
-              <span className="material-symbols-outlined text-orange-700 cursor-pointer">
-                mail
-              </span>
-
-              <span className="material-symbols-outlined text-orange-700 cursor-pointer">
-                share
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      {/* BOTTOM BAR */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 bg-white/80 backdrop-blur-xl px-8 py-4 rounded-full shadow-2xl border border-white/40 flex items-center gap-8 md:gap-12">
-        <button className="flex flex-col items-center gap-1">
-          <span
-            className="material-symbols-outlined text-orange-700"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            explore
-          </span>
-
-          <span className="text-sm text-orange-700">Khám phá</span>
-        </button>
-
-        <button className="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition">
-          <span className="material-symbols-outlined">event_note</span>
-
-          <span className="text-sm">Lịch trình</span>
-        </button>
-
-        <button className="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition">
-          <span className="material-symbols-outlined">favorite</span>
-
-          <span className="text-sm">Yêu thích</span>
-        </button>
-
-        <button className="flex flex-col items-center gap-1 opacity-60 hover:opacity-100 transition">
-          <span className="material-symbols-outlined">smart_toy</span>
-
-          <span className="text-sm">AI Trợ lý</span>
-        </button>
-      </div>
+      <SiteFooter />
+      <BottomNav />
     </div>
   );
 }

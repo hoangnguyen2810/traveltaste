@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import SiteShell from "@/components/SiteShell";
 
 const AVATAR_PLACEHOLDER =
@@ -12,10 +12,12 @@ const AVATAR_PLACEHOLDER =
 export default function ProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<
-    "saved" | "history" | "reviews"
-  >("saved");
+  const pathname = usePathname();
+  const [activeTab, setActiveTab] = useState<"saved" | "history" | "reviews">(
+    "saved",
+  );
   const [location, setLocation] = useState("Hà Nội, Việt Nam");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -32,9 +34,10 @@ export default function ProfilePage() {
         if (data.profile?.location) {
           setLocation(data.profile.location);
         }
+        setAvatarUrl(data.profile?.avatar_url ?? null);
       })
       .catch(() => {});
-  }, [status]);
+  }, [status, pathname]);
 
   if (status === "loading") {
     return (
@@ -51,6 +54,9 @@ export default function ProfilePage() {
   const displayName =
     session.user.name?.trim() || session.user.email?.split("@")[0] || "Bạn";
 
+  const avatarSrc =
+    avatarUrl ?? session.user.image ?? AVATAR_PLACEHOLDER;
+
   return (
     <SiteShell>
       <main className="max-w-7xl mx-auto px-6 lg:px-10 py-8 lg:py-16 space-y-16 pb-40">
@@ -59,7 +65,7 @@ export default function ProfilePage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               alt=""
-              src={session.user.image ?? AVATAR_PLACEHOLDER}
+              src={avatarSrc}
               className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white shadow-lg bg-surface-container"
             />
             <Link
@@ -67,7 +73,9 @@ export default function ProfilePage() {
               className="absolute bottom-1 right-1 bg-primary text-on-primary p-2 rounded-full shadow-md hover:scale-105 transition-transform"
               aria-label="Chỉnh sửa ảnh đại diện"
             >
-              <span className="material-symbols-outlined text-[18px]">edit</span>
+              <span className="material-symbols-outlined text-[18px]">
+                edit
+              </span>
             </Link>
           </div>
           <div className="flex-1 text-center md:text-left space-y-2 pb-2">
