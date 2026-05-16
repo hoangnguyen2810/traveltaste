@@ -44,8 +44,11 @@ export default function HomePage() {
 
             <div className="relative">
               <button
+                type="button"
                 onClick={() => setOpenMenu(!openMenu)}
                 className="p-2 rounded-full hover:bg-zinc-100 transition"
+                aria-label="Tài khoản"
+                aria-expanded={openMenu}
               >
                 <span className="material-symbols-outlined">
                   account_circle

@@ -5,14 +5,21 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+function getSafeCallbackUrl(raw: string | null): string {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//")) return "/";
+  return raw;
+}
+
 export default function LoginPage() {
   const { status } = useSession();
   const router = useRouter();
+  const [callbackUrl, setCallbackUrl] = useState("/");
   const [registered, setRegistered] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setRegistered(params.get("registered") === "1");
+    setCallbackUrl(getSafeCallbackUrl(params.get("callbackUrl")));
   }, []);
 
   const [email, setEmail] = useState("");
@@ -24,9 +31,11 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (status === "authenticated") {
-      router.replace("/");
-    }
+    if (status !== "authenticated") return;
+    const next = getSafeCallbackUrl(
+      new URLSearchParams(window.location.search).get("callbackUrl")
+    );
+    router.replace(next);
   }, [status, router]);
 
   const handleGoogleLogin = async () => {
@@ -34,7 +43,7 @@ export default function LoginPage() {
     setGoogleLoading(true);
 
     await signIn("google", {
-      callbackUrl: "/",
+      callbackUrl,
       redirect: true,
     });
   };
@@ -44,7 +53,7 @@ export default function LoginPage() {
     setFbLoading(true);
 
     await signIn("facebook", {
-      callbackUrl: "/",
+      callbackUrl,
       redirect: true,
     });
   };
@@ -89,7 +98,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/");
+    router.push(callbackUrl);
     router.refresh();
   };
 

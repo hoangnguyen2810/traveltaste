@@ -43,6 +43,33 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  callbacks: {
+    async jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.name = user.name;
+        token.email = user.email;
+        token.sub = user.id;
+      }
+      if (trigger === "update" && session && typeof session === "object") {
+        const payload = session as Record<string, unknown>;
+        if (typeof payload.name === "string") {
+          token.name = payload.name;
+        }
+        const u = payload.user as { name?: string } | undefined;
+        if (u && typeof u.name === "string") {
+          token.name = u.name;
+        }
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.name = (token.name as string) ?? session.user.name;
+        session.user.email = (token.email as string) ?? session.user.email;
+      }
+      return session;
+    },
+  },
   pages: {
     signIn: "/login",
   },
