@@ -108,3 +108,20 @@ function normalizeProvinceRow(row: Province): Province {
     sort_order: Number(row.sort_order ?? 0),
   };
 }
+
+export async function searchProvinces(keyword: string, limit = 10) {
+  const pool = getPool();
+
+  const result = await pool.query(
+    `
+    SELECT id, name, slug, featured, sort_order
+    FROM provinces
+    WHERE name ILIKE $1
+    ORDER BY sort_order ASC
+    LIMIT $2
+    `,
+    [`%${keyword}%`, limit],
+  );
+
+  return result.rows;
+}

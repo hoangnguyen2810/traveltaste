@@ -139,16 +139,6 @@ export default function SearchPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <aside className="lg:col-span-3 space-y-8 bg-white p-8 rounded-2xl shadow-soft">
             <FilterSection title="Tỉnh / Thành">
-              <div className="relative mb-4">
-                <input
-                  type="text"
-                  className="w-full h-10 pl-10 pr-4 rounded-full border border-zinc-200 bg-zinc-50 text-base focus:ring-2 focus:ring-orange-700 focus:border-transparent outline-none"
-                  placeholder="Tìm tỉnh thành..."
-                />
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-[20px]">
-                  search
-                </span>
-              </div>
               <div className="space-y-3">
                 {provincesLoading ? (
                   <p className="text-sm text-zinc-500">Đang tải...</p>
@@ -160,30 +150,18 @@ export default function SearchPage() {
                   </p>
                 ) : (
                   sidebarProvinces.map((province, i) => (
-                    <CheckboxRow
-                      key={province.id}
-                      label={province.name}
-                      defaultChecked={i === 0}
-                    />
+                    <CheckboxRow key={province.id} label={province.name} />
                   ))
                 )}
               </div>
               <button
                 type="button"
                 onClick={() => setProvinceModalOpen(true)}
-                className="mt-4 text-orange-700 text-sm font-semibold flex items-center gap-1
-             transition-all duration-300 ease-out
-             hover:text-orange-600 hover:gap-2
-             hover:translate-x-1
-             active:scale-95"
+                className="mt-4 text-orange-700 text-sm font-semibold flex items-center gap-1 cursor-pointer transition-all duration-300 hover:gap-2 hover:text-orange-800 hover:translate-x-0.5 active:scale-95"
               >
                 <span className="transition-all duration-300">Xem thêm</span>
 
-                <span
-                  className="material-symbols-outlined text-[18px]
-               transition-transform duration-300
-               group-hover:rotate-180"
-                >
+                <span className="material-symbols-outlined text-[18px] transition-transform duration-300 group-hover:rotate-180">
                   expand_more
                 </span>
               </button>
@@ -191,13 +169,13 @@ export default function SearchPage() {
 
             <FilterSection title="Khoảng giá">
               <CheckboxRow label="Dưới 200.000đ" />
-              <CheckboxRow label="200.000đ - 500.000đ" defaultChecked />
+              <CheckboxRow label="200.000đ - 500.000đ" />
               <CheckboxRow label="Trên 500.000đ" />
             </FilterSection>
 
             <FilterSection title="Loại hình" bordered>
-              <CheckboxRow label="Quán cà phê" defaultChecked />
-              <CheckboxRow label="Nhà hàng Á" defaultChecked />
+              <CheckboxRow label="Quán cà phê" />
+              <CheckboxRow label="Nhà hàng Á" />
               <CheckboxRow label="Điểm tham quan" />
               <CheckboxRow label="Homestay" />
             </FilterSection>
@@ -223,7 +201,6 @@ export default function SearchPage() {
                 <input
                   type="radio"
                   name="rating"
-                  defaultChecked
                   className="text-orange-700 focus:ring-orange-700"
                 />
                 <span className="flex items-center gap-1 text-zinc-600 group-hover:text-orange-700">
@@ -240,7 +217,7 @@ export default function SearchPage() {
 
             <button
               type="button"
-              className="w-full py-4 bg-orange-700 text-white rounded-full text-sm font-semibold hover:opacity-90 transition-all active:scale-95"
+              className="w-full py-4 bg-orange-700 text-white rounded-full cursor-pointer text-sm font-semibold hover:opacity-90 transition-all active:scale-95"
             >
               Áp dụng lọc
             </button>
@@ -257,8 +234,8 @@ export default function SearchPage() {
               className="mt-16 flex justify-center gap-2"
               aria-label="Phân trang"
             >
-              <PaginationButton>1</PaginationButton>
-              <PaginationButton active>2</PaginationButton>
+              <PaginationButton active>1</PaginationButton>
+              <PaginationButton>2</PaginationButton>
               <PaginationButton>3</PaginationButton>
               <PaginationButton aria-label="Trang sau">
                 <span className="material-symbols-outlined">chevron_right</span>

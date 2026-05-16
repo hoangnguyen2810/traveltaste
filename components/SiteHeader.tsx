@@ -65,7 +65,7 @@ export default function SiteHeader({ activeNav = "home" }: Props) {
             <button
               type="button"
               onClick={() => setOpenMenu(!openMenu)}
-              className="p-2 rounded-full hover:bg-zinc-100 transition"
+              className="p-2 rounded-full cursor-pointer hover:bg-zinc-100 transition"
               aria-label="Tài khoản"
               aria-expanded={openMenu}
             >
